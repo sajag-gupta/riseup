@@ -29,6 +29,17 @@ declare module "express-session" {
   }
 }
 
+// Placeholder for requireAuth middleware if not globally defined
+// Assume it's defined elsewhere and checks for req.session.userId
+const requireAuth = (req: AuthenticatedRequest, res, next) => {
+  if (req.session?.userId) {
+    req.userId = req.session.userId; // Attach userId to request
+    next();
+  } else {
+    res.status(401).json({ message: "Authentication required" });
+  }
+};
+
 export async function registerRoutes(app: Express): Promise<Server> {
   const MemoryStore = createMemoryStore(session);
   const store = new MemoryStore({ checkPeriod: 1000 * 60 * 60 * 24 });
@@ -146,10 +157,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const user = await storage.getUserById(userId);
       if (!user) return res.status(404).json({ message: "User not found" });
 
-      return res.json(user);
+      // Fetch user stats
+      const { Track, Like, Playlist, User } = await import("../shared/schema");
+      const likedSongsCount = await Like.countDocuments({ userId });
+      const playlistsCount = await Playlist.countDocuments({ userId });
+      const memberSince = user.createdAt; // Assuming user object has createdAt field
+
+      return res.json({
+        ...user,
+        likedSongsCount,
+        playlistsCount,
+        memberSince
+      });
     } catch (err) {
       console.error("Get user error:", err);
       return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Update user profile
+  app.put("/api/auth/profile", requireAuth, async (req, res) => {
+    try {
+      const { firstName, lastName, username, bio, profilePicture } = req.body;
+      const User = (await import("../shared/schema")).User; // Import User model
+
+      const updatedUser = await User.findByIdAndUpdate(
+        req.userId,
+        { firstName, lastName, username, bio, profilePicture },
+        { new: true, runValidators: true }
+      ).select("-password");
+
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Update profile error:", error);
+      res.status(500).json({ message: "Failed to update profile" });
     }
   });
 
@@ -280,7 +325,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get liked songs
-  app.get("/api/liked-songs", async (req, res) => {
+  app.get("/api/liked-songs", async (req: AuthenticatedRequest, res) => {
     try {
       const userId = req.session?.userId;
       if (!userId) {
@@ -288,12 +333,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const { Like, Track } = await import("../shared/schema");
-      const likes = await Like.find({ userId }).populate('trackId').lean();
+      const likes = await Like.find({ userId }).populate({
+        path: 'trackId',
+        populate: {
+          path: 'creatorId',
+          select: 'username'
+        }
+      }).sort({ createdAt: -1 });
 
-      const likedTracks = likes.map(like => ({
-        ...like.trackId,
-        likedAt: like.createdAt
-      }));
+      const likedTracks = likes
+        .filter(like => like.trackId) // Filter out null tracks
+        .map(like => ({
+          _id: like.trackId._id,
+          title: like.trackId.title,
+          artistName: like.trackId.creatorId?.username || 'Unknown Artist',
+          album: like.trackId.album,
+          audioUrl: like.trackId.audioUrl,
+          coverUrl: like.trackId.coverUrl,
+          duration: like.trackId.duration,
+          plays: like.trackId.plays || 0,
+          likedAt: like.createdAt
+        }));
 
       res.json(likedTracks);
     } catch (error) {
@@ -303,7 +363,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get playlists
-  app.get("/api/playlists", async (req, res) => {
+  app.get("/api/playlists", async (req: AuthenticatedRequest, res) => {
     try {
       const userId = req.session?.userId;
       if (!userId) {
@@ -320,7 +380,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Create playlist
-  app.post("/api/playlists", async (req, res) => {
+  app.post("/api/playlists", async (req: AuthenticatedRequest, res) => {
     try {
       const userId = req.session?.userId;
       if (!userId) {
@@ -351,7 +411,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { playlistId } = req.params;
       const { trackId } = req.body;
 
-      console.log("Adding track to playlist:", { playlistId, trackId, userId: req.user?.id });
+      const userId = req.session?.userId;
+      if (!userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
 
       if (!trackId) {
         return res.status(400).json({ error: "Track ID is required" });
@@ -362,13 +425,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Invalid playlist or track ID" });
       }
 
+      const { Playlist, Track } = await import("../shared/schema"); // Import necessary schemas
+
       const playlist = await Playlist.findOne({
         _id: playlistId,
-        userId: req.user.id
+        userId: userId // Use userId from session
       });
 
       if (!playlist) {
-        return res.status(404).json({ error: "Playlist not found" });
+        return res.status(404).json({ error: "Playlist not found or you don't own it" });
       }
 
       // Check if track exists

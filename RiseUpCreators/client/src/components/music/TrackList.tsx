@@ -35,10 +35,7 @@ export function TrackList({ tracks, title }: TrackListProps) {
 
       <div className="space-y-2">
         {tracks.map((track) => (
-          <div
-            key={track.id}
-            className="flex items-center px-4 py-3 hover:bg-spotify-light-gray rounded-lg transition-colors cursor-pointer group"
-          >
+          <div key={track.id || track._id} className="flex items-center px-4 py-3 hover:bg-spotify-light-gray rounded-lg transition-colors cursor-pointer group">
             <div className="w-12 h-12 flex-shrink-0 mr-4">
               <img
                 src={track.coverUrl || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80"}

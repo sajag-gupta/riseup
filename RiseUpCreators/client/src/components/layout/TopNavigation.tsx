@@ -58,7 +58,7 @@ export function TopNavigation() {
   };
 
   return (
-    <header className="flex items-center justify-between p-3 md:p-6 bg-spotify-black/95 backdrop-blur-md border-b border-gray-700/50 sticky top-0 z-30">
+    <header className="flex items-center justify-between p-3 md:p-6 bg-spotify-black/60 backdrop-blur-xl border-b border-gray-700/30 sticky top-0 z-30">
       {/* Navigation Buttons - Hidden on mobile */}
       <div className="hidden md:flex items-center space-x-4">
         <Button
