@@ -79,8 +79,8 @@ function Router() {
             <Route path="/settings" component={() => <MainLayout><Settings /></MainLayout>} />
             <Route path="/now-playing/:id" component={NowPlaying} />
             <Route path="/genre/:genre" component={Genre} />
-            <Route path="/liked-songs" component={LikedSongs} />
-            <Route path="/playlists" component={Playlists} />
+            <Route path="/liked-songs" component={() => <MainLayout><LikedSongs /></MainLayout>} />
+            <Route path="/playlists" component={() => <MainLayout><Playlists /></MainLayout>} />
             <Route path="/admin" component={AdminPanel} />
           </>
         ) : (
