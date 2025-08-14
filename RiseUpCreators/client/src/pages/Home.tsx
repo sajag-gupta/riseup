@@ -112,27 +112,25 @@ export default function Home() {
             Show all
           </Button>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
-          {trendingTracks.slice(0, 6).map((track: any, index: number) => (
-            <div
-              key={track._id}
-              className="animate-slide-in-up hover:animate-bounce-slow"
-              style={{ animationDelay: `${0.8 + index * 0.1}s` }}
-            >
-              <TrackCard
-                track={{
-                  id: track._id,
-                  title: track.title,
-                  creator: { username: track.artistName },
-                  coverUrl: track.coverUrl,
-                  audioUrl: track.audioUrl,
-                  duration: track.duration,
-                  plays: track.plays,
-                  isLiked: false
-                }}
-              />
-            </div>
-          ))}
+        <div className="relative">
+          <div className="flex overflow-x-auto scrollbar-hide gap-4 pb-4">
+            {trendingTracks.slice(0, 10).map((track: any) => (
+              <div key={track._id} className="flex-shrink-0 w-48">
+                <TrackCard
+                  track={{
+                    id: track._id,
+                    title: track.title,
+                    creator: { username: track.artistName },
+                    coverUrl: track.coverUrl,
+                    audioUrl: track.audioUrl,
+                    duration: track.duration,
+                    plays: track.plays,
+                    isLiked: false
+                  }}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

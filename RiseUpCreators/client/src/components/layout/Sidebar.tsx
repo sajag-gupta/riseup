@@ -248,20 +248,9 @@ export function Sidebar({ className }: SidebarProps) {
           type="button"
         />
 
-        {/* Mobile Overlay */}
-        {isMobileOpen && (
-          <div 
-            className="fixed inset-0 bg-black/60 z-[55] md:hidden" 
-            onClick={(e) => {
-              e.preventDefault();
-              setIsMobileOpen(false);
-            }} 
-          />
-        )}
-
-        {/* Mobile Sidebar */}
+        {/* Mobile Sidebar - Full Screen */}
         <aside className={cn(
-          "fixed left-0 top-0 h-full w-72 bg-spotify-black z-[60] transform transition-transform duration-300 ease-out md:hidden shadow-xl",
+          "fixed inset-0 w-full h-full bg-spotify-black z-[60] transform transition-transform duration-300 ease-out md:hidden",
           isMobileOpen ? "translate-x-0" : "-translate-x-full",
           className
         )}>

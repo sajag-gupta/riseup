@@ -119,9 +119,17 @@ export default function LikedSongs() {
       <div className="px-4 md:px-6 pb-8">
         {likedTracks.length > 0 ? (
           <div className="space-y-1 md:space-y-2">
+            {/* Table Header */}
+            <div className="hidden md:grid grid-cols-12 gap-4 px-4 py-2 text-sm text-gray-400 border-b border-gray-700">
+              <div className="col-span-1">#</div>
+              <div className="col-span-6">Title</div>
+              <div className="col-span-3">Album</div>
+              <div className="col-span-2">Duration</div>
+            </div>
+            
             {likedTracks.map((track: LikedTrack, index: number) => (
-              <div key={track._id} className="flex items-center gap-2 md:gap-4 p-2 rounded-lg hover:bg-gray-800/50 group">
-                <span className="text-gray-400 w-6 md:w-8 text-center text-sm md:text-base group-hover:hidden">
+              <div key={track._id} className="flex md:grid md:grid-cols-12 items-center gap-2 md:gap-4 p-2 md:p-4 rounded-lg hover:bg-gray-800/50 group">
+                <span className="text-gray-400 w-6 md:w-8 text-center text-sm md:text-base group-hover:hidden md:col-span-1">
                   {index + 1}
                 </span>
                 <Button
@@ -135,24 +143,38 @@ export default function LikedSongs() {
                   })}
                   variant="ghost"
                   size="sm"
-                  className="w-6 h-6 md:w-8 md:h-8 hidden group-hover:flex items-center justify-center text-white hover:bg-gray-600"
+                  className="w-6 h-6 md:w-8 md:h-8 hidden group-hover:flex items-center justify-center text-white hover:bg-gray-600 md:col-span-1"
                 >
                   <Play className="w-3 h-3 md:w-4 md:h-4" />
                 </Button>
-                <div className="flex-1 min-w-0">
-                  <TrackCard 
-                    track={{
-                      id: track._id,
-                      title: track.title,
-                      creator: { username: track.artistName },
-                      coverUrl: track.coverUrl,
-                      audioUrl: track.audioUrl,
-                      duration: track.duration,
-                      plays: track.plays,
-                      isLiked: true
-                    }} 
-                    showInlinePlayer={true}
-                  />
+                
+                {/* Track Info */}
+                <div className="flex items-center gap-3 flex-1 md:col-span-6">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg overflow-hidden bg-gray-700 flex-shrink-0">
+                    {track.coverUrl ? (
+                      <img src={track.coverUrl} alt={track.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Music className="w-4 h-4 md:w-6 md:h-6 text-gray-400" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-white font-medium truncate">{track.title}</p>
+                    <p className="text-gray-400 text-sm truncate">{track.artistName}</p>
+                  </div>
+                </div>
+                
+                {/* Album (Desktop only) */}
+                <div className="hidden md:block md:col-span-3">
+                  <p className="text-gray-400 text-sm truncate">{track.album || "Single"}</p>
+                </div>
+                
+                {/* Duration (Desktop only) */}
+                <div className="hidden md:block md:col-span-2">
+                  <p className="text-gray-400 text-sm">
+                    {track.duration ? Math.floor(track.duration / 60) + ":" + String(track.duration % 60).padStart(2, "0") : "0:00"}
+                  </p>
                 </div>
               </div>
             ))}

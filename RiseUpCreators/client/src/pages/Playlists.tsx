@@ -156,36 +156,84 @@ export default function Playlists() {
         </div>
 
         {playlists.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
-            {playlists.map((playlist: Playlist) => (
-              <Card key={playlist._id} className="bg-spotify-light-gray hover:bg-gray-700 transition-colors cursor-pointer group">
-                <CardContent className="p-3 md:p-4">
-                  <div className="relative mb-3 md:mb-4">
-                    <div className="w-full aspect-square bg-gradient-to-br from-gray-600 to-gray-800 rounded-lg flex items-center justify-center">
-                      <Music className="w-8 h-8 md:w-12 md:h-12 text-gray-400" />
-                    </div>
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
-                      <Button className="w-10 h-10 md:w-12 md:h-12 bg-spotify-green rounded-full flex items-center justify-center shadow-lg">
-                        <Play className="w-4 h-4 md:w-6 md:h-6 text-black ml-1" />
-                      </Button>
-                    </div>
-                  </div>
-                  <Link href={`/playlist/${playlist._id}`}>
-                    <h3 className="text-white font-medium truncate mb-1 hover:underline text-sm md:text-base">
-                      {playlist.name}
-                    </h3>
-                  </Link>
-                  <p className="text-gray-400 text-xs md:text-sm truncate">
-                    {playlist.trackIds.length} {playlist.trackIds.length === 1 ? 'song' : 'songs'}
-                  </p>
-                  {playlist.description && (
-                    <p className="text-gray-500 text-xs mt-1 truncate">
-                      {playlist.description}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+          <div className="space-y-6">
+            {/* Recently Created */}
+            <div>
+              <h3 className="text-xl font-semibold text-white mb-4">Recently Created</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
+                {playlists.slice(0, 6).map((playlist: Playlist) => (
+                  <Card key={playlist._id} className="bg-spotify-light-gray hover:bg-gray-700 transition-colors cursor-pointer group">
+                    <CardContent className="p-3 md:p-4">
+                      <div className="relative mb-3 md:mb-4">
+                        <div className="w-full aspect-square bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
+                          <Music className="w-8 h-8 md:w-12 md:h-12 text-white" />
+                        </div>
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
+                          <Button className="w-10 h-10 md:w-12 md:h-12 bg-spotify-green rounded-full flex items-center justify-center shadow-lg">
+                            <Play className="w-4 h-4 md:w-6 md:h-6 text-black ml-1" />
+                          </Button>
+                        </div>
+                      </div>
+                      <Link href={`/playlist/${playlist._id}`}>
+                        <h3 className="text-white font-medium truncate mb-1 hover:underline text-sm md:text-base">
+                          {playlist.name}
+                        </h3>
+                      </Link>
+                      <p className="text-gray-400 text-xs md:text-sm truncate">
+                        {playlist.trackIds.length} {playlist.trackIds.length === 1 ? 'song' : 'songs'}
+                      </p>
+                      {playlist.description && (
+                        <p className="text-gray-500 text-xs mt-1 truncate">
+                          {playlist.description}
+                        </p>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+            
+            {/* All Playlists */}
+            {playlists.length > 6 && (
+              <div>
+                <h3 className="text-xl font-semibold text-white mb-4">All Playlists</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {playlists.map((playlist: Playlist) => (
+                    <Card key={playlist._id} className="bg-spotify-light-gray hover:bg-gray-700 transition-colors cursor-pointer group">
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <Music className="w-8 h-8 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <Link href={`/playlist/${playlist._id}`}>
+                              <h3 className="text-white font-medium truncate mb-1 hover:underline">
+                                {playlist.name}
+                              </h3>
+                            </Link>
+                            <p className="text-gray-400 text-sm truncate">
+                              {playlist.trackIds.length} {playlist.trackIds.length === 1 ? 'song' : 'songs'}
+                            </p>
+                            {playlist.description && (
+                              <p className="text-gray-500 text-xs mt-1 truncate">
+                                {playlist.description}
+                              </p>
+                            )}
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="w-10 h-10 bg-spotify-green rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <Play className="w-5 h-5 text-black ml-1" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-center py-12">
