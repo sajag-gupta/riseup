@@ -69,15 +69,15 @@ export function Sidebar({ className }: SidebarProps) {
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className={cn(
-        "flex items-center p-6 border-b border-gray-700",
-        isCollapsed && !isMobile ? "justify-center" : "justify-between"
+        "flex items-center border-b border-gray-700",
+        isCollapsed && !isMobile ? "justify-center p-4" : "justify-between p-6"
       )}>
         {(!isCollapsed || isMobile) && (
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-spotify-green to-creator-orange rounded-lg flex items-center justify-center">
-              <Music className="w-5 h-5 text-black" />
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-spotify-green to-creator-orange rounded-lg flex items-center justify-center">
+              <Music className="w-6 h-6 text-black" />
             </div>
-            <span className="text-xl font-bold text-white">RiseUp</span>
+            <span className="text-2xl font-bold text-white">RiseUp</span>
           </div>
         )}
         
@@ -86,9 +86,9 @@ export function Sidebar({ className }: SidebarProps) {
             variant="ghost"
             size="sm"
             onClick={() => setIsMobileOpen(false)}
-            className="text-gray-400 hover:text-white md:hidden"
+            className="text-gray-400 hover:text-white md:hidden p-2"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </Button>
         ) : (
           <Button
@@ -103,9 +103,9 @@ export function Sidebar({ className }: SidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
+      <nav className="flex-1 px-4 py-6 space-y-8 overflow-y-auto">
         {/* Main Navigation */}
-        <div className="space-y-1">
+        <div className="space-y-2">
           {mainNavItems.map((item) => (
             <Button
               key={item.path}
@@ -115,14 +115,14 @@ export function Sidebar({ className }: SidebarProps) {
                 if (isMobile) setIsMobileOpen(false);
               }}
               className={cn(
-                "w-full text-left text-gray-400 hover:text-white hover:bg-gray-700 transition-colors",
+                "w-full text-left text-gray-300 hover:text-white hover:bg-gray-700 transition-colors h-12 text-base font-medium",
                 isActive(item.path) && "text-white bg-gray-700",
                 isCollapsed && !isMobile ? "justify-center px-2" : "justify-start px-4"
               )}
             >
               <item.icon className={cn(
-                "w-5 h-5",
-                isCollapsed && !isMobile ? "" : "mr-3"
+                "w-6 h-6",
+                isCollapsed && !isMobile ? "" : "mr-4"
               )} />
               {(!isCollapsed || isMobile) && item.label}
             </Button>
@@ -130,9 +130,9 @@ export function Sidebar({ className }: SidebarProps) {
         </div>
 
         {/* Library Section */}
-        <div className="space-y-1">
+        <div className="space-y-2">
           {(!isCollapsed || isMobile) && (
-            <h3 className="px-4 text-sm font-medium text-gray-400 uppercase tracking-wider">
+            <h3 className="px-4 text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
               Your Library
             </h3>
           )}
@@ -145,14 +145,14 @@ export function Sidebar({ className }: SidebarProps) {
                 if (isMobile) setIsMobileOpen(false);
               }}
               className={cn(
-                "w-full text-left text-gray-400 hover:text-white hover:bg-gray-700 transition-colors",
+                "w-full text-left text-gray-300 hover:text-white hover:bg-gray-700 transition-colors h-12 text-base font-medium",
                 isActive(item.path) && "text-white bg-gray-700",
                 isCollapsed && !isMobile ? "justify-center px-2" : "justify-start px-4"
               )}
             >
               <item.icon className={cn(
-                "w-5 h-5",
-                isCollapsed && !isMobile ? "" : "mr-3"
+                "w-6 h-6",
+                isCollapsed && !isMobile ? "" : "mr-4"
               )} />
               {(!isCollapsed || isMobile) && item.label}
             </Button>
@@ -160,9 +160,9 @@ export function Sidebar({ className }: SidebarProps) {
         </div>
 
         {/* Account Section */}
-        <div className="space-y-1">
+        <div className="space-y-2">
           {(!isCollapsed || isMobile) && (
-            <h3 className="px-4 text-sm font-medium text-gray-400 uppercase tracking-wider">
+            <h3 className="px-4 text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
               Account
             </h3>
           )}
@@ -175,14 +175,14 @@ export function Sidebar({ className }: SidebarProps) {
                 if (isMobile) setIsMobileOpen(false);
               }}
               className={cn(
-                "w-full text-left text-gray-400 hover:text-white hover:bg-gray-700 transition-colors",
+                "w-full text-left text-gray-300 hover:text-white hover:bg-gray-700 transition-colors h-12 text-base font-medium",
                 isActive(item.path) && "text-white bg-gray-700",
                 isCollapsed && !isMobile ? "justify-center px-2" : "justify-start px-4"
               )}
             >
               <item.icon className={cn(
-                "w-5 h-5",
-                isCollapsed && !isMobile ? "" : "mr-3"
+                "w-6 h-6",
+                isCollapsed && !isMobile ? "" : "mr-4"
               )} />
               {(!isCollapsed || isMobile) && item.label}
             </Button>
@@ -197,14 +197,14 @@ export function Sidebar({ className }: SidebarProps) {
                 if (isMobile) setIsMobileOpen(false);
               }}
               className={cn(
-                "w-full text-left text-creator-orange hover:text-white hover:bg-gray-700 transition-colors",
+                "w-full text-left text-creator-orange hover:text-white hover:bg-gray-700 transition-colors h-12 text-base font-medium",
                 isActive("/admin") && "text-white bg-gray-700",
                 isCollapsed && !isMobile ? "justify-center px-2" : "justify-start px-4"
               )}
             >
               <Crown className={cn(
-                "w-5 h-5",
-                isCollapsed && !isMobile ? "" : "mr-3"
+                "w-6 h-6",
+                isCollapsed && !isMobile ? "" : "mr-4"
               )} />
               {(!isCollapsed || isMobile) && "Admin Panel"}
             </Button>
@@ -236,24 +236,25 @@ export function Sidebar({ className }: SidebarProps) {
   if (isMobile) {
     return (
       <>
-        {/* Mobile Menu Button */}
-        <Button
-          variant="ghost"
-          size="sm"
+        {/* Hidden toggle button for external access */}
+        <button
+          data-sidebar-toggle
           onClick={() => setIsMobileOpen(true)}
-          className="fixed top-4 left-4 z-[70] bg-spotify-light-gray text-white hover:bg-gray-600 md:hidden"
-        >
-          <Menu className="w-5 h-5" />
-        </Button>
+          className="hidden"
+          aria-hidden="true"
+        />
 
         {/* Mobile Overlay */}
         {isMobileOpen && (
-          <div className="fixed inset-0 bg-black/50 z-[55] md:hidden" onClick={() => setIsMobileOpen(false)} />
+          <div 
+            className="fixed inset-0 bg-black/60 z-[55] md:hidden" 
+            onClick={() => setIsMobileOpen(false)} 
+          />
         )}
 
         {/* Mobile Sidebar */}
         <aside className={cn(
-          "fixed left-0 top-0 h-full w-64 bg-spotify-black border-r border-gray-700 z-[60] transform transition-transform duration-200 md:hidden",
+          "fixed left-0 top-0 h-full w-72 bg-spotify-black z-[60] transform transition-transform duration-300 ease-out md:hidden shadow-xl",
           isMobileOpen ? "translate-x-0" : "-translate-x-full",
           className
         )}>
