@@ -48,7 +48,6 @@ export function Sidebar({ className }: SidebarProps) {
 
   const mainNavItems = [
     { icon: Home, label: "Home", path: "/" },
-    { icon: Search, label: "Browse", path: "/browse" },
     { icon: Library, label: "App Library", path: "/app-library" },
   ];
 
@@ -58,7 +57,6 @@ export function Sidebar({ className }: SidebarProps) {
   ];
 
   const accountItems = [
-    { icon: User, label: "Profile", path: "/profile" },
     { icon: ShoppingBag, label: "Shop", path: "/shop" },
     { icon: Settings, label: "Settings", path: "/settings" },
   ];
@@ -212,24 +210,7 @@ export function Sidebar({ className }: SidebarProps) {
         </div>
       </nav>
 
-      {/* User Info */}
-      {user && (!isCollapsed || isMobile) && (
-        <div className="p-4 border-t border-gray-700">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-spotify-green to-creator-orange rounded-full flex items-center justify-center">
-              <span className="text-black font-semibold text-sm">
-                {user.username?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}
-              </span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white font-medium truncate">
-                {user.username || user.email}
-              </p>
-              <p className="text-gray-400 text-sm truncate">Free Plan</p>
-            </div>
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 
@@ -250,7 +231,7 @@ export function Sidebar({ className }: SidebarProps) {
 
         {/* Mobile Sidebar - Full Screen */}
         <aside className={cn(
-          "fixed inset-0 w-full h-full bg-spotify-black z-[60] transform transition-transform duration-300 ease-out md:hidden",
+          "fixed inset-0 w-full h-full bg-black z-[60] transform transition-transform duration-300 ease-out md:hidden",
           isMobileOpen ? "translate-x-0" : "-translate-x-full",
           className
         )}>
