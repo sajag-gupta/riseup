@@ -31,12 +31,29 @@ export function TopNavigation() {
       refetch();
       setLocation("/login");
     },
+    onError: (error) => {
+      console.error('Logout error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to logout. Please try again.",
+        variant: "destructive",
+      });
+    },
   });
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && searchQuery.trim()) {
-      // Navigate to browse page with search query
-      setLocation(`/browse?search=${encodeURIComponent(searchQuery.trim())}`);
+    try {
+      if (e.key === 'Enter' && searchQuery.trim()) {
+        // Navigate to browse page with search query
+        setLocation(`/browse?search=${encodeURIComponent(searchQuery.trim())}`);
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to perform search. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -66,9 +83,18 @@ export function TopNavigation() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => {
-              const sidebarToggle = document.querySelector('[data-sidebar-toggle]') as HTMLButtonElement;
-              if (sidebarToggle) sidebarToggle.click();
+            onClick={(e) => {
+              e.preventDefault();
+              try {
+                const sidebarToggle = document.querySelector('[data-sidebar-toggle]') as HTMLButtonElement;
+                if (sidebarToggle) {
+                  sidebarToggle.click();
+                } else {
+                  console.warn('Sidebar toggle button not found');
+                }
+              } catch (error) {
+                console.error('Error toggling sidebar:', error);
+              }
             }}
             className="p-2 hover:bg-gray-800 rounded-full"
           >

@@ -239,16 +239,23 @@ export function Sidebar({ className }: SidebarProps) {
         {/* Hidden toggle button for external access */}
         <button
           data-sidebar-toggle
-          onClick={() => setIsMobileOpen(true)}
+          onClick={(e) => {
+            e.preventDefault();
+            setIsMobileOpen(true);
+          }}
           className="hidden"
           aria-hidden="true"
+          type="button"
         />
 
         {/* Mobile Overlay */}
         {isMobileOpen && (
           <div 
             className="fixed inset-0 bg-black/60 z-[55] md:hidden" 
-            onClick={() => setIsMobileOpen(false)} 
+            onClick={(e) => {
+              e.preventDefault();
+              setIsMobileOpen(false);
+            }} 
           />
         )}
 
