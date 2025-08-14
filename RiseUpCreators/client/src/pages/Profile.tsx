@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,17 +32,6 @@ export default function Profile() {
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
 
-  // Fetch user stats
-  const { data: userStats } = useQuery({
-    queryKey: ["/api/user/stats"],
-    queryFn: async () => {
-      const response = await fetch("/api/user/stats", { credentials: "include" });
-      if (!response.ok) return { likedSongs: 0, playlists: 0 };
-      return response.json();
-    },
-    enabled: !!user,
-  });
-
   const form = useForm<ProfileData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -54,37 +43,11 @@ export default function Profile() {
     },
   });
 
-  // Update form when user data changes
-  React.useEffect(() => {
-    if (user) {
-      form.reset({
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        username: user.username || "",
-        bio: user.bio || "",
-        profilePicture: user.profilePicture || "",
-      });
-    }
-  }, [user, form]);
-
   const updateProfileMutation = useMutation({
-    mutationFn: async (data: ProfileData) => {
-      const response = await fetch("/api/auth/profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(data),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to update profile");
-      }
-      
-      return response.json();
-    },
+    mutationFn: (data: ProfileData) => apiRequest("/api/profile", {
+      method: "PUT",
+      body: data,
+    }),
     onSuccess: () => {
       toast({
         title: "Success",
@@ -93,7 +56,6 @@ export default function Profile() {
       setIsEditing(false);
       refetch();
       queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/user/stats"] });
     },
     onError: (error: Error) => {
       toast({
@@ -378,23 +340,21 @@ export default function Profile() {
                       <Heart className="w-4 h-4" />
                       Liked Songs
                     </span>
-                    <span className="text-white font-medium">{userStats?.likedSongs || 0}</span>
+                    <span className="text-white font-medium">0</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400 flex items-center gap-2">
                       <Music className="w-4 h-4" />
                       Playlists
                     </span>
-                    <span className="text-white font-medium">{userStats?.playlists || 0}</span>
+                    <span className="text-white font-medium">0</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400 flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
                       Member Since
                     </span>
-                    <span className="text-white font-medium">
-                      {user?.createdAt ? new Date(user.createdAt).getFullYear() : new Date().getFullYear()}
-                    </span>
+                    <span className="text-white font-medium">2024</span>
                   </div>
                 </div>
               </CardContent>
