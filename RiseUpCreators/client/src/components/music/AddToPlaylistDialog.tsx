@@ -69,9 +69,13 @@ export function AddToPlaylistDialog({ isOpen, onClose, trackId, trackTitle }: Ad
       if (!response.ok) throw new Error("Failed to create playlist");
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["/api/playlists"] });
-      toast({ title: `Created playlist "${newPlaylistName}" with track added!` });
+      queryClient.invalidateQueries({ queryKey: [`/api/playlists/${data._id}`] });
+      toast({ 
+        title: "Success!", 
+        description: `Created "${newPlaylistName}" and added track successfully.` 
+      });
       handleClose();
     },
     onError: () => {
@@ -92,7 +96,12 @@ export function AddToPlaylistDialog({ isOpen, onClose, trackId, trackTitle }: Ad
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["/api/playlists"] });
-      toast({ title: data.message || "Track added to playlist!" });
+      queryClient.invalidateQueries({ queryKey: [`/api/playlists/${selectedPlaylist}`] });
+      const selectedPlaylistName = playlists.find((p: Playlist) => p._id === selectedPlaylist)?.name || "playlist";
+      toast({ 
+        title: "Added to playlist!", 
+        description: `Track successfully added to "${selectedPlaylistName}".` 
+      });
       handleClose();
     },
     onError: (error: any) => {
@@ -137,6 +146,26 @@ export function AddToPlaylistDialog({ isOpen, onClose, trackId, trackTitle }: Ad
         </DialogHeader>
         
         <div className="space-y-4">
+          {/* Quick Action Buttons */}
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              onClick={() => setShowCreateNew(true)}
+              variant="outline"
+              className="border-gray-600 text-white hover:bg-gray-700 h-12"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Create New
+            </Button>
+            <Button
+              onClick={() => setShowCreateNew(false)}
+              variant="outline"
+              className={`border-gray-600 text-white hover:bg-gray-700 h-12 ${!showCreateNew ? 'bg-gray-700' : ''}`}
+            >
+              <Music className="w-4 h-4 mr-2" />
+              Add to Existing
+            </Button>
+          </div>
+
           {!showCreateNew ? (
             <>
               <div className="space-y-2">
@@ -165,23 +194,13 @@ export function AddToPlaylistDialog({ isOpen, onClose, trackId, trackTitle }: Ad
                 </Select>
               </div>
               
-              <div className="flex justify-between gap-3">
-                <Button
-                  onClick={() => setShowCreateNew(true)}
-                  variant="outline"
-                  className="flex-1 border-gray-600 text-white hover:bg-gray-700"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  New Playlist
-                </Button>
-                <Button
-                  onClick={handleSubmit}
-                  disabled={!selectedPlaylist || addToPlaylistMutation.isPending}
-                  className="flex-1 bg-spotify-green text-black hover:bg-spotify-green/90"
-                >
-                  {addToPlaylistMutation.isPending ? "Adding..." : "Add"}
-                </Button>
-              </div>
+              <Button
+                onClick={handleSubmit}
+                disabled={!selectedPlaylist || addToPlaylistMutation.isPending}
+                className="w-full bg-spotify-green text-black hover:bg-spotify-green/90"
+              >
+                {addToPlaylistMutation.isPending ? "Adding..." : "Add to Playlist"}
+              </Button>
             </>
           ) : (
             <>
@@ -193,25 +212,17 @@ export function AddToPlaylistDialog({ isOpen, onClose, trackId, trackTitle }: Ad
                   placeholder="My Awesome Playlist"
                   className="bg-gray-700 border-gray-600 text-white"
                   onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+                  autoFocus
                 />
               </div>
               
-              <div className="flex justify-between gap-3">
-                <Button
-                  onClick={() => setShowCreateNew(false)}
-                  variant="outline"
-                  className="flex-1 border-gray-600 text-white hover:bg-gray-700"
-                >
-                  Back
-                </Button>
-                <Button
-                  onClick={handleSubmit}
-                  disabled={!newPlaylistName.trim() || createPlaylistMutation.isPending}
-                  className="flex-1 bg-spotify-green text-black hover:bg-spotify-green/90"
-                >
-                  {createPlaylistMutation.isPending ? "Creating..." : "Create & Add"}
-                </Button>
-              </div>
+              <Button
+                onClick={handleSubmit}
+                disabled={!newPlaylistName.trim() || createPlaylistMutation.isPending}
+                className="w-full bg-spotify-green text-black hover:bg-spotify-green/90"
+              >
+                {createPlaylistMutation.isPending ? "Creating..." : "Create & Add Song"}
+              </Button>
             </>
           )}
           

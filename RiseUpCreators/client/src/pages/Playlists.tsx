@@ -93,7 +93,7 @@ export default function Playlists() {
   }
 
   return (
-    <main className="flex-1 overflow-y-auto custom-scrollbar px-6 pb-24">
+    <div className="flex-1 overflow-y-auto custom-scrollbar px-6 pb-24">
       <div className="py-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-4xl font-poppins font-bold text-white">Your Playlists</h1>
@@ -250,6 +250,6 @@ export default function Playlists() {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

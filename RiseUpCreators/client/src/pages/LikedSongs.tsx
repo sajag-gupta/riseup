@@ -76,7 +76,7 @@ export default function LikedSongs() {
   }
 
   return (
-    <main className="flex-1 overflow-y-auto custom-scrollbar pb-24 pt-16 md:pt-0">
+    <div className="flex-1 overflow-y-auto custom-scrollbar pb-24">
       {/* Header */}
       <div className="bg-gradient-to-b from-purple-800 to-spotify-black px-4 md:px-6 py-6 md:py-8">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-end gap-4 md:gap-6">
@@ -193,6 +193,6 @@ export default function LikedSongs() {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

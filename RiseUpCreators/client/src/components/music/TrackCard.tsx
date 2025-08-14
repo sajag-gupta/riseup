@@ -190,9 +190,15 @@ export function TrackCard({ track, showInlinePlayer = false }: TrackCardProps) {
                 <Download className="w-4 h-4 mr-2" />
                 Download
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleAddToPlaylist} className="text-white hover:bg-gray-600">
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowPlaylistDialog(true);
+                }}
+                className="text-white hover:bg-gray-600 cursor-pointer"
+              >
                 <Plus className="w-4 h-4 mr-2" />
-                Add to Playlist
+                Add to playlist
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
