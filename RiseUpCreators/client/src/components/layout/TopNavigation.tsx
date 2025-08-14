@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Search, ChevronDown, LogOut, User, Settings, Music } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, ChevronDown, LogOut, User, Settings, Music, Menu } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -107,7 +107,7 @@ export function TopNavigation() {
             <span className="text-xl font-bold text-white">RiseUp</span>
           </div>
         </div>
-        
+
         {/* Mobile User Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
